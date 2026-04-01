@@ -2,7 +2,7 @@
 //  Drona-a-charya v2 | app.js
 //  Auth gate + real mentor data from MongoDB
 // =============================================
-
+const BASE_URL ="https://mentor-connect-2-ixzr.onrender.com"
 // ---- STATE ----
 let currentUser  = null;
 let authToken    = null;
@@ -127,7 +127,7 @@ async function doLogin() {
   btn.disabled = true; btn.textContent = 'Logging in…';
 
   try {
-    const res  = await fetch('/api/auth/login', {
+    const res  = await fetch(`${BASE_URL}/api/auth/login`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ email, password })
@@ -176,7 +176,7 @@ async function doRegister() {
   btn.disabled = true; btn.textContent = 'Creating account…';
 
   try {
-    const res  = await fetch('/api/auth/register', {
+    const res  = await fetch(`${BASE_URL}/api/auth/register`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(payload)
@@ -234,7 +234,7 @@ async function loadMentors() {
     '<div class="loading-state">Loading mentors…</div>';
 
   try {
-    const res  = await fetch('/api/mentors', {
+    const res  = await fetch(`${BASE_URL}/api/mentors`, {
       headers: { 'Authorization': 'Bearer ' + authToken }
     });
     const data = await res.json();
@@ -406,7 +406,7 @@ async function requestSession() {
   const m = mentorsData.find(x => x._id === activeMentorId);
   if (!m) return;
   try {
-    await fetch('/api/sessions', {
+    await fetch(`${BASE_URL}/api/sessions`, {
       method: 'POST',
       headers: { 'Content-Type':'application/json', 'Authorization':'Bearer '+authToken },
       body: JSON.stringify({ mentorId: activeMentorId, slot: selectedSlot || 'TBD', message: '' })
@@ -420,7 +420,7 @@ async function quickBook(id) {
   const m = mentorsData.find(x => x._id === id);
   if (!m) return;
   try {
-    await fetch('/api/sessions', {
+    await fetch(`${BASE_URL}/api/sessions`, {
       method: 'POST',
       headers: { 'Content-Type':'application/json', 'Authorization':'Bearer '+authToken },
       body: JSON.stringify({ mentorId: id, slot: 'TBD', message: 'Quick booking request' })
