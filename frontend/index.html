@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Drona-a-charya | Mentor Connect</title>
+  <link rel="stylesheet" href="css/style.css"/>
+  <link rel="stylesheet" href="css/auth.css"/>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;700&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet"/>
+</head>
+<body>
+
+  <!-- ══════════════════════════════════════════
+       AUTH GATE OVERLAY  (shown until logged in)
+       ══════════════════════════════════════════ -->
+  <div class="auth-overlay" id="authOverlay">
+    <div class="auth-bg-pattern"></div>
+
+    <div class="auth-box" id="authBox">
+
+      <!-- ── BRAND HEADER ── -->
+      <div class="auth-brand">
+        <span class="auth-logo">Drona-a-charya</span>
+        <span class="auth-tagline">Drone Innovation Platform</span>
+      </div>
+
+      <!-- ── MODE TOGGLE (Login / Sign up) ── -->
+      <div class="auth-toggle">
+        <button class="atgl active" id="btnLogin"  onclick="showLogin()">Log in</button>
+        <button class="atgl"        id="btnSignup" onclick="showSignup()">Sign up</button>
+      </div>
+
+      <!-- ════ LOGIN FORM ════ -->
+      <div id="loginForm">
+        <div class="field-group">
+          <label class="field-label">Email</label>
+          <input type="email" id="loginEmail" class="field-input" placeholder="you@example.com"/>
+        </div>
+        <div class="field-group">
+          <label class="field-label">Password</label>
+          <input type="password" id="loginPass" class="field-input" placeholder="••••••••"/>
+        </div>
+        <div class="auth-error" id="loginError"></div>
+        <button class="auth-submit" onclick="doLogin()">Log in</button>
+        <p class="auth-switch">No account? <a onclick="showSignup()">Sign up free</a></p>
+      </div>
+
+      <!-- ════ SIGNUP FORM  (3 slides) ════ -->
+      <div id="signupForm" style="display:none">
+
+        <!-- progress dots -->
+        <div class="signup-dots">
+          <span class="dot active" id="dot1"></span>
+          <span class="dot"        id="dot2"></span>
+          <span class="dot"        id="dot3"></span>
+        </div>
+
+        <!-- ── Slide 1: Basics ── -->
+        <div class="signup-slide" id="slide1">
+          <p class="slide-heading">Create your account</p>
+          <div class="field-group">
+            <label class="field-label">Full name</label>
+            <input type="text" id="suName" class="field-input" placeholder="Aryan Kumar"/>
+          </div>
+          <div class="field-group">
+            <label class="field-label">Email</label>
+            <input type="email" id="suEmail" class="field-input" placeholder="you@example.com"/>
+          </div>
+          <div class="field-group">
+            <label class="field-label">Password</label>
+            <input type="password" id="suPass" class="field-input" placeholder="Min 6 characters"/>
+          </div>
+          <div class="auth-error" id="slide1Error"></div>
+          <button class="auth-submit" onclick="goSlide2()">Continue</button>
+        </div>
+
+        <!-- ── Slide 2: Role ── -->
+        <div class="signup-slide" id="slide2" style="display:none">
+          <p class="slide-heading">I am joining as a…</p>
+          <div class="role-cards">
+            <div class="role-card" id="roleStudent" onclick="selectRole('student')">
+              <div class="role-icon">
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 14l9-5-9-5-9 5 9 5z"/><path d="M12 14l6.16-3.422A12.083 12.083 0 0112 21a12.083 12.083 0 01-6.16-10.422L12 14z"/></svg>
+              </div>
+              <div class="role-title">Student</div>
+              <div class="role-desc">Browse mentors, book sessions, collaborate on projects</div>
+            </div>
+            <div class="role-card" id="roleMentor" onclick="selectRole('mentor')">
+              <div class="role-icon">
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/><path d="M17 11l2 2 4-4"/></svg>
+              </div>
+              <div class="role-title">Mentor</div>
+              <div class="role-desc">Share expertise, guide students, partner with industry</div>
+            </div>
+          </div>
+          <div class="auth-error" id="slide2Error"></div>
+          <div class="slide-nav">
+            <button class="auth-back" onclick="goSlide1()">Back</button>
+            <button class="auth-submit" style="flex:1" onclick="goSlide3()">Continue</button>
+          </div>
+        </div>
+
+        <!-- ── Slide 3: Mentor details OR student finish ── -->
+        <div class="signup-slide" id="slide3" style="display:none">
+          <!-- MENTOR details -->
+          <div id="mentorDetails">
+            <p class="slide-heading">Tell mentees about you</p>
+            <div class="field-row">
+              <div class="field-group">
+                <label class="field-label">Institution / Company</label>
+                <input type="text" id="suInstitution" class="field-input" placeholder="IIT Delhi / ISRO"/>
+              </div>
+              <div class="field-group">
+                <label class="field-label">Designation</label>
+                <input type="text" id="suDesignation" class="field-input" placeholder="Assoc. Prof. / Researcher"/>
+              </div>
+            </div>
+            <div class="field-group">
+              <label class="field-label">Years of experience</label>
+              <input type="text" id="suExperience" class="field-input" placeholder="e.g. 8 years"/>
+            </div>
+            <div class="field-group">
+              <label class="field-label">Expertise (select all that apply)</label>
+              <div class="expertise-chips" id="expertiseChips">
+                <span class="exp-chip" onclick="toggleChip(this)" data-val="Autonomous Flight">Autonomous Flight</span>
+                <span class="exp-chip" onclick="toggleChip(this)" data-val="AI/ML">AI / ML</span>
+                <span class="exp-chip" onclick="toggleChip(this)" data-val="Hardware">Hardware</span>
+                <span class="exp-chip" onclick="toggleChip(this)" data-val="Regulations">Regulations</span>
+                <span class="exp-chip" onclick="toggleChip(this)" data-val="UX">UX &amp; Design</span>
+                <span class="exp-chip" onclick="toggleChip(this)" data-val="Propulsion">Propulsion</span>
+              </div>
+            </div>
+            <div class="field-group">
+              <label class="field-label">Short bio</label>
+              <textarea id="suBio" class="field-input field-textarea" placeholder="A few sentences about your work and what you can help with…" rows="3"></textarea>
+            </div>
+          </div>
+
+          <!-- STUDENT: just confirmation -->
+          <div id="studentDetails" style="display:none">
+            <p class="slide-heading">You're all set!</p>
+            <p style="font-size:14px;color:var(--text-muted);line-height:1.7;text-align:center;padding:0 8px">
+              Your student account is ready. You can now browse mentors and request sessions.
+            </p>
+          </div>
+
+          <div class="auth-error" id="slide3Error"></div>
+          <div class="slide-nav">
+            <button class="auth-back" onclick="goSlide2()">Back</button>
+            <button class="auth-submit" style="flex:1" id="finalBtn" onclick="doRegister()">Create account</button>
+          </div>
+        </div>
+
+      </div><!-- /signupForm -->
+
+    </div><!-- /auth-box -->
+  </div><!-- /auth-overlay -->
+
+
+  <!-- ══════════════════════════════════════════
+       MAIN APP  (hidden until logged in)
+       ══════════════════════════════════════════ -->
+  <div class="app" id="mainApp" style="display:none">
+
+    <nav class="nav">
+      <div class="logo">Drona-a-charya <span class="logo-badge">BETA</span></div>
+      <div class="nav-tabs">
+        <button class="nav-tab">Project Hub</button>
+        <button class="nav-tab active">Mentor Connect</button>
+        <button class="nav-tab">Collab Zone</button>
+        <button class="nav-tab">Industry</button>
+      </div>
+      <div class="nav-right">
+        <span class="user-name" id="navUserName"></span>
+        <div class="avatar-sm" id="navAvatar"></div>
+        <button class="logout-btn" onclick="doLogout()">Log out</button>
+      </div>
+    </nav>
+
+    <div class="steps-banner">
+      <div class="step-item completed"><div class="step-circle">1</div><div class="step-text"><div class="step-title">Create Profile</div><div class="step-desc">Account created</div></div></div>
+      <div class="step-line completed"></div>
+      <div class="step-item active"><div class="step-circle">2</div><div class="step-text"><div class="step-title">Find a Mentor</div><div class="step-desc">Browse &amp; request a session</div></div></div>
+      <div class="step-line"></div>
+      <div class="step-item"><div class="step-circle">3</div><div class="step-text"><div class="step-title">Start Collaborating</div><div class="step-desc">Join projects &amp; build together</div></div></div>
+    </div>
+
+    <div class="hero">
+      <div class="hero-left">
+        <h1>Find your drone mentor</h1>
+        <p>Connect with real experts from our community. Get guidance, co-author research, and accelerate your project.</p>
+      </div>
+      <div class="hero-stats">
+        <div class="stat-card"><div class="stat-num" id="statMentors">—</div><div class="stat-lbl">Mentors</div></div>
+        <div class="stat-card"><div class="stat-num" id="statAvail">—</div><div class="stat-lbl">Available now</div></div>
+      </div>
+    </div>
+
+    <div class="filters">
+      <span class="filter-label">Expertise:</span>
+      <button class="chip active" onclick="filterChip(this,'All')">All</button>
+      <button class="chip" onclick="filterChip(this,'Autonomous Flight')">Autonomous Flight</button>
+      <button class="chip" onclick="filterChip(this,'AI/ML')">AI / ML</button>
+      <button class="chip" onclick="filterChip(this,'Hardware')">Hardware</button>
+      <button class="chip" onclick="filterChip(this,'Regulations')">Regulations</button>
+      <button class="chip" onclick="filterChip(this,'UX')">UX &amp; Design</button>
+      <div class="search-box">
+        <input type="text" id="search" placeholder="Search mentors…" oninput="renderCards()"/>
+      </div>
+    </div>
+
+    <div class="grid" id="mentorGrid">
+      <div class="loading-state">Loading mentors…</div>
+    </div>
+  </div>
+
+  <!-- PANEL OVERLAY -->
+  <div class="panel-overlay" id="overlay" onclick="closePanel(event)">
+    <div class="panel" id="panel"></div>
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+  <script src="js/app.js"></script>
+</body>
+</html>
